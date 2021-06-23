@@ -5,16 +5,16 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import android.util.Log
 import com.coder.zt.gamehanlder.view.SteeringYokeView
-import com.coder.zt.gamehanlder.view.SteeringYokeView.OnKeyBoardListener
 import com.coder.zt.gamehanlder.viewmode.KeyBoardViewModel
 import java.lang.StringBuilder
 import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
-    private val keyDownList:MutableList<Int> by lazy {
+    private val keyDownList:MutableList<String> by lazy {
         mutableListOf()
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         val yokeView = findViewById<SteeringYokeView>(R.id.yoke)
         yokeView.setListener {
+            val removeList:MutableList<String> by lazy {
+                mutableListOf()
+            }
             for( i in keyDownList){
                 if(!it.contains(i)){
                     when(i){
@@ -44,10 +47,14 @@ class MainActivity : AppCompatActivity() {
                             viewModel.keyUp(68)
                         }
                     }
-                    keyDownList.remove(i)
+                    removeList.add(i)
                 }
             }
 
+            for (i in removeList){
+                keyDownList.remove(i)
+            }
+            removeList.clear()
             for (i in it){
                 when(i){
                     SteeringYokeView.DIR_DOWN -> {
@@ -79,6 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         }
         yokeView.setUpListener {
+            val removeList:MutableList<String> = mutableListOf()
+
             for (i in keyDownList){
                 when(i){
                     SteeringYokeView.DIR_DOWN -> {
@@ -94,8 +103,8 @@ class MainActivity : AppCompatActivity() {
                         viewModel.keyUp(68)
                     }
                 }
-                keyDownList.remove(i)
             }
+            keyDownList.clear()
         }
     }
 }

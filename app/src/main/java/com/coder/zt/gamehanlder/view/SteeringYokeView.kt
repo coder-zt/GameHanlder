@@ -16,12 +16,13 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
     private val TAG = "SteeringYokeView"
     private val backgroundColor: Int = Color.parseColor("#eeeeee")
     private val touchPointColor: Int = Color.parseColor("#ffffff")
+    private val distance: Int = 100
 
     companion object{
-        val DIR_LEFT:Int = 0
-        val DIR_UP:Int = 1
-        val DIR_RIGHT:Int = 2
-        val DIR_DOWN:Int = 3
+        val DIR_LEFT:String = "left"
+        val DIR_UP:String = "up"
+        val DIR_RIGHT:String = "right"
+        val DIR_DOWN:String = "down"
     }
 
     private val backGroundPaint by lazy {
@@ -120,15 +121,15 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         val x = yokePoint.x - width/2
         val y = yokePoint.y - height/2
         Log.d(TAG, "callKeyBoard: ($x ,$y)")
-        val keyList = mutableListOf<Int>()
-        if(x >120){
+        val keyList = mutableListOf<String>()
+        if(x >distance){
             keyList.add(DIR_RIGHT)
-        }else if(x < (-120)){
+        }else if(x < (-distance)){
             keyList.add(DIR_LEFT)
         }
-        if(y >120){
+        if(y >distance){
             keyList.add(DIR_DOWN)
-        }else if(y < (-120)){
+        }else if(y < (-distance)){
             keyList.add(DIR_UP)
         }
         listener?.invoke(keyList)
@@ -140,7 +141,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         return sqrt(pow)
     }
 
-    private var listener: ((List<Int>) -> Unit)? = null
+    private var listener: ((List<String>) -> Unit)? = null
 
     private var keyUpListener: (() -> Unit)? = null
 
@@ -148,11 +149,8 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         keyUpListener = callback
     }
 
-    fun setListener(callback:((List<Int>) -> Unit)){
+    fun setListener(callback:((List<String>) -> Unit)){
         listener = callback
     }
 
-interface OnKeyBoardListener{
-    fun onKeyBoard(keys:List<Int>)
-}
 }

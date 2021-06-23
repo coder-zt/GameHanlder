@@ -14,14 +14,14 @@ class KeyBoardViewModel:ViewModel() {
     fun keyDown(keyCode:Int){
         viewModelScope.launch {
             val message: ResponseResult = Api.getInstance().keyDown(keyCode)
-            Log.d(TAG, "keyDown: " + message)
+            Log.d(TAG, "keyDown: " + message.keyCode)
         }
     }
 
     fun keyUp(keyCode:Int){
         viewModelScope.launch {
             val message:ResponseResult = Api.getInstance().keyUp(keyCode)
-            Log.d(TAG, "keyUp: " + message)
+            Log.d(TAG, "keyUp: " + message.keyCode)
         }
     }
 }
