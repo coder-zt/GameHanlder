@@ -2,18 +2,14 @@ package com.coder.zt.gamehanlder
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import android.util.Log
+import androidx.activity.viewModels
 import com.coder.zt.gamehanlder.view.SteeringYokeView
 import com.coder.zt.gamehanlder.viewmode.KeyBoardViewModel
-import java.lang.StringBuilder
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
-    private val keyDownList:MutableList<String> by lazy {
-        mutableListOf()
-    }
+    private var result: com.coder.zt.gamehanlder.net.Result? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,83 +24,45 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         val yokeView = findViewById<SteeringYokeView>(R.id.yoke)
         yokeView.setListener {
-            val removeList:MutableList<String> by lazy {
-                mutableListOf()
-            }
-            for( i in keyDownList){
-                if(!it.contains(i)){
-                    when(i){
-                        SteeringYokeView.DIR_DOWN -> {
-                            viewModel.keyUp(83)
-                        }
-                        SteeringYokeView.DIR_UP -> {
-                            viewModel.keyUp(87)
-                        }
-                        SteeringYokeView.DIR_LEFT -> {
-                            viewModel.keyUp(65)
-                        }//a
-                        SteeringYokeView.DIR_RIGHT -> {
-                            viewModel.keyUp(68)
-                        }
-                    }
-                    removeList.add(i)
+            Log.d(TAG, "initView: $it")
+            var perCodes:List<Int>? = null
+            if(result!=null) {
+                perCodes = result?.perCodes
+                if(perCodes == null){
+                    perCodes = listOf()
                 }
+            }else{
+                perCodes = listOf()
             }
-
-            for (i in removeList){
-                keyDownList.remove(i)
-            }
-            removeList.clear()
-            for (i in it){
-                when(i){
-                    SteeringYokeView.DIR_DOWN -> {
-                        if(!keyDownList.contains(SteeringYokeView.DIR_DOWN)){
-                            viewModel.keyDown(83)
-                            keyDownList.add(SteeringYokeView.DIR_DOWN)
-                        }
-                    }
-                    SteeringYokeView.DIR_UP -> {
-                        if(!keyDownList.contains(SteeringYokeView.DIR_UP)){
-                            viewModel.keyDown(87)
-                            keyDownList.add(SteeringYokeView.DIR_UP)
-                        }
-                    }
-                    SteeringYokeView.DIR_LEFT -> {
-                        if(!keyDownList.contains(SteeringYokeView.DIR_LEFT)){
-                            viewModel.keyDown(65)
-                            keyDownList.add(SteeringYokeView.DIR_LEFT)
-                        }
-                    }//a
-                    SteeringYokeView.DIR_RIGHT -> {
-                        if(!keyDownList.contains(SteeringYokeView.DIR_RIGHT)){
-                            viewModel.keyDown(68)
-                            keyDownList.add(SteeringYokeView.DIR_RIGHT)
-                        }
-                    }
-                }
-            }
+            Log.d(TAG, "initView: perCodes--->$perCodes")
+            viewModel.sendKeys(com.coder.zt.gamehanlder.net.Result().Success(true).PerCodes(perCodes).CurCodes(
+                it))
 
         }
         yokeView.setUpListener {
-            val removeList:MutableList<String> = mutableListOf()
-
-            for (i in keyDownList){
-                when(i){
-                    SteeringYokeView.DIR_DOWN -> {
-                        viewModel.keyUp(83)
-                    }
-                    SteeringYokeView.DIR_UP -> {
-                        viewModel.keyUp(87)
-                    }
-                    SteeringYokeView.DIR_LEFT -> {
-                        viewModel.keyUp(65)
-                    }
-                    SteeringYokeView.DIR_RIGHT -> {
-                        viewModel.keyUp(68)
-                    }
+            var perCodes:List<Int>? = null
+            if(result==null) {
+                perCodes = listOf()
+            }else{
+                perCodes = result?.curCodes
+                if(perCodes == null){
+                    perCodes = listOf()
                 }
             }
-            keyDownList.clear()
+            if (perCodes != null) {
+                viewModel.sendKeys(com.coder.zt.gamehanlder.net.Result().Success(true).PerCodes(perCodes).CurCodes(
+                    listOf<Int>()))
+            }
+
+        }
+        viewModel.keyResult.observe(this){
+            Log.d(TAG, "initView: curCodes---> ${it.curCodes}")
+            Log.d(TAG, " initView: server: perCodes---> ${it.perCodes}")
+            if (result == null) {
+                result = it
+            }
+
+            result?.perCodes = it.curCodes
         }
     }
 }

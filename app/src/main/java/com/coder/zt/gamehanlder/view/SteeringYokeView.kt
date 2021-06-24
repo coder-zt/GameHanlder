@@ -19,10 +19,10 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
     private val distance: Int = 100
 
     companion object{
-        val DIR_LEFT:String = "left"
-        val DIR_UP:String = "up"
-        val DIR_RIGHT:String = "right"
-        val DIR_DOWN:String = "down"
+        val DIR_LEFT:Int = 87
+        val DIR_UP:Int = 53
+        val DIR_RIGHT:Int = 68
+        val DIR_DOWN:Int = 83
     }
 
     private val backGroundPaint by lazy {
@@ -44,7 +44,9 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
     }
 
     private var currentTouchPoint = Point(width/2, height/2)
-    private var yokePoint = Point(width/2, height/2)
+    private val yokePoint by lazy{
+        Point(width/2, height/2)
+    }
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawCircle(width/2.0f, height/2.0f, height/2.0f, backGroundPaint)
@@ -69,6 +71,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         canvas?.drawCircle(yokePoint.x.toFloat(), yokePoint.y.toFloat(), height/2.0f* 0.3f, touchPointPaint)
     }
 
+    private var pointId = -1
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         event?.apply {
             currentTouchPoint.x = x.toInt()
@@ -77,13 +80,23 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         }
 
         when(event?.action){
+
             MotionEvent.ACTION_DOWN ->{
 
             }
             MotionEvent.ACTION_MOVE ->{
-
+                val pointerId = event.getPointerId(0)
+                if(pointId == -1){
+                    pointId = pointerId
+                }else if(pointId != pointerId){
+                    return false
+                }
+            }
+            MotionEvent.ACTION_POINTER_UP->{
+                Log.d(TAG, "onTouchEvent: ACTION_POINTER_UP")
             }
             MotionEvent.ACTION_UP ->{
+                Log.d(TAG, "onTouchEvent: ACTION_UP")
                 reset()
             }
         }
@@ -121,7 +134,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         val x = yokePoint.x - width/2
         val y = yokePoint.y - height/2
         Log.d(TAG, "callKeyBoard: ($x ,$y)")
-        val keyList = mutableListOf<String>()
+        val keyList = mutableListOf<Int>()
         if(x >distance){
             keyList.add(DIR_RIGHT)
         }else if(x < (-distance)){
@@ -141,7 +154,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         return sqrt(pow)
     }
 
-    private var listener: ((List<String>) -> Unit)? = null
+    private var listener: ((List<Int>) -> Unit)? = null
 
     private var keyUpListener: (() -> Unit)? = null
 
@@ -149,7 +162,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
         keyUpListener = callback
     }
 
-    fun setListener(callback:((List<String>) -> Unit)){
+    fun setListener(callback:((List<Int>) -> Unit)){
         listener = callback
     }
 
