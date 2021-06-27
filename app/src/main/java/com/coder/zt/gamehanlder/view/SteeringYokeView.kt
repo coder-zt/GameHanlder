@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -19,10 +20,10 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
     private val distance: Int = 100
 
     companion object{
-        val DIR_LEFT:Int = 87
-        val DIR_UP:Int = 53
-        val DIR_RIGHT:Int = 68
-        val DIR_DOWN:Int = 83
+        const val DIR_LEFT:Int = 65//a
+        const val DIR_UP:Int = 87//w
+        const val DIR_RIGHT:Int = 68//d
+        const val DIR_DOWN:Int = 83//s
     }
 
     private val backGroundPaint by lazy {
@@ -85,12 +86,12 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
 
             }
             MotionEvent.ACTION_MOVE ->{
-                val pointerId = event.getPointerId(0)
-                if(pointId == -1){
-                    pointId = pointerId
-                }else if(pointId != pointerId){
-                    return false
-                }
+//                val pointerId = event.getPointerId(0)
+//                if(pointId == -1){
+//                    pointId = pointerId
+//                }else if(pointId != pointerId){
+//                    return false
+//                }
             }
             MotionEvent.ACTION_POINTER_UP->{
                 Log.d(TAG, "onTouchEvent: ACTION_POINTER_UP")
@@ -164,6 +165,21 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
 
     fun setListener(callback:((List<Int>) -> Unit)){
         listener = callback
+    }
+
+    fun clearKeys(pressKeys: MutableLiveData<MutableSet<Int>>, keyUp:Boolean):MutableSet<Int> {
+        val temp = mutableSetOf<Int>();
+        if (pressKeys.value != null) {
+            for(i in pressKeys.value!!){
+                if(i != DIR_UP && i != DIR_RIGHT && i != DIR_DOWN && i != DIR_LEFT){
+                    temp.add(i)
+                }
+            }
+            if(keyUp){
+                pressKeys.value = temp
+            }
+        }
+        return temp
     }
 
 }

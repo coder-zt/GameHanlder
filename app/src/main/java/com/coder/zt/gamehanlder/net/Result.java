@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Set;
 
 
 public class Result {
@@ -23,37 +24,56 @@ public class Result {
         this.success = success;
         return this;
     }
-    public List<Integer> getPerCodes() {
+    public Set<Integer> getPerCodes() {
         return perCodes;
     }
 
-    public void setPerCodes(List<Integer> perCodes) {
+    public void setPerCodes(Set<Integer> perCodes) {
         this.perCodes = perCodes;
     }
 
-    public Result PerCodes(List<Integer> perCodes) {
+    public Result PerCodes(Set<Integer> perCodes) {
         this.perCodes = perCodes;
         return this;
     }
-    public List<Integer> getCurCodes() {
+    public Set<Integer> getCurCodes() {
         return curCodes;
     }
 
-    public void setCurCodes(List<Integer> curCodes) {
+    public void setCurCodes(Set<Integer> curCodes) {
         this.curCodes = curCodes;
     }
-    public Result CurCodes(List<Integer> perCodes) {
+    public Result CurCodes(Set<Integer> perCodes) {
         this.curCodes = perCodes;
         return this;
     }
+
+    public Result Index(Integer index) {
+        this.index = index;
+        return this;
+    }
+
+
     @SerializedName("success")
     @Expose
     private Boolean success;
     @SerializedName("perCodes")
     @Expose
-    private List<Integer> perCodes;
+    private Set<Integer> perCodes;
     @SerializedName("curCodes")
     @Expose
-    private List<Integer> curCodes;
+    private Set<Integer> curCodes;
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    @SerializedName("index")
+    @Expose
+    private Integer index;//aaaaaaaaaaaa
 
 }

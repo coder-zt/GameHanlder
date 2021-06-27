@@ -11,7 +11,7 @@ class KeyBoardViewModel:ViewModel() {
 
     private val TAG = "KeyBoardViewModel"
 
-    var keyResult = MutableLiveData<com.coder.zt.gamehanlder.net.Result>()
+    val keyResult = MutableLiveData<com.coder.zt.gamehanlder.net.Result>()
 
     fun sendKeys(keySender:com.coder.zt.gamehanlder.net.Result){
         Log.d(TAG, "sendKeys: ${keySender.curCodes}")
