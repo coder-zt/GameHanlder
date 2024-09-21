@@ -34,6 +34,21 @@
         app:layout_constraintEnd_toStartOf="@+id/skill"
         app:layout_constraintStart_toEndOf="@+id/yoke" />
 
+
+    <TextView
+        android:id="@+id/tv_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="搜索game-handler服务器"
+        android:textSize="22sp"
+        android:layout_marginTop="20dp"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="8dp"
+        android:background="@drawable/query_btn_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/select_btn_tv"
         android:layout_width="60dp"

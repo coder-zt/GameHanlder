@@ -48,7 +48,7 @@ class SteeringYokeView(context: Context,attrs: AttributeSet): View(context, attr
     private val yokePoint by lazy{
         Point(width/2, height/2)
     }
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas?.drawCircle(width/2.0f, height/2.0f, height/2.0f, backGroundPaint)
         val dashPathEffect1 = DashPathEffect(floatArrayOf(60f, 60f), 0F)

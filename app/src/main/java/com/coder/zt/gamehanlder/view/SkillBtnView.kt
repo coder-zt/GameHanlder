@@ -40,7 +40,7 @@ class SkillBtnView(context: Context, attrs: AttributeSet): View(context, attrs) 
 
         }
     }
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val centerPoint = Point(width/2, height/2)
         mCenterPoint = centerPoint

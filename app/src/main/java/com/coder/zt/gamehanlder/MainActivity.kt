@@ -1,19 +1,21 @@
 package com.coder.zt.gamehanlder
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.coder.zt.gamehanlder.net.Result
+import com.coder.zt.gamehanlder.net.RetrofitManager
+import com.coder.zt.gamehanlder.utils.Constants
 import com.coder.zt.gamehanlder.view.SkillBtnView
 import com.coder.zt.gamehanlder.view.SteeringYokeView
 import com.coder.zt.gamehanlder.viewmode.KeyBoardViewModel
-import kotlinx.coroutines.delay
-import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,14 +27,26 @@ class MainActivity : AppCompatActivity() {
     val mHandler:Handler by lazy{
         Handler(Looper.getMainLooper())
     }
+    private val viewModel  by viewModels<KeyBoardViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val decorView = window.decorView
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_main)
         initView()
         initData()
     }
 
     private fun initData() {
+        viewModel.clientIPs.observe(this){
+            Log.d(TAG, "initData: ")
+            for (s in it) {
+                Constants.BASE_URL = "http://$s:80"
+                Log.d(TAG, "initData: ${Constants.BASE_URL}")
+                RetrofitManager.getInstance().init("http://$s")
+            }
+        }
         result.perCodes = mutableSetOf()
         result.curCodes = mutableSetOf()
         viewModel.keyResult.observe(this){
@@ -96,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val viewModel: KeyBoardViewModel by viewModels()
+
 
     private  val TAG = "MainActivity"
     private fun initView() {
@@ -162,5 +176,15 @@ class MainActivity : AppCompatActivity() {
                 pressKeys.postValue(this)
             }
         }
+        val tvSearchBtn = findViewById<TextView>(R.id.tv_search)
+        tvSearchBtn.setOnClickListener {
+            doSearch()
+        }
     }
+
+    private fun doSearch() {
+        viewModel.getClientIP()
+    }
+
+
 }
